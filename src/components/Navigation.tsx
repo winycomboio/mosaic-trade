@@ -2,9 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import SearchBar from "./SearchBar";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Globe } from "lucide-react";
 
 const Navigation = () => {
   const navigate = useNavigate();
+  const { language, setLanguage, t } = useLanguage();
 
   const handleServiceSelect = (serviceId: string) => {
     navigate(`/services/${serviceId}`);
@@ -22,16 +26,27 @@ const Navigation = () => {
           </div>
           <div className="hidden md:flex items-center space-x-6">
             <Link to="/services" className="text-text-secondary hover:text-primary transition-colors">
-              Services
+              {t("services")}
             </Link>
             <Link to="/about" className="text-text-secondary hover:text-primary transition-colors">
-              About
+              {t("about")}
             </Link>
             <Link to="/contact" className="text-text-secondary hover:text-primary transition-colors">
-              Contact
+              {t("contact")}
             </Link>
+            <Select value={language} onValueChange={(value) => setLanguage(value as "en" | "fr" | "pt")}>
+              <SelectTrigger className="w-[140px] border-border/50">
+                <Globe className="w-4 h-4 mr-2" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="en">English</SelectItem>
+                <SelectItem value="fr">Français</SelectItem>
+                <SelectItem value="pt">Português</SelectItem>
+              </SelectContent>
+            </Select>
             <Button variant="default" className="bg-gradient-primary hover:opacity-90 transition-opacity">
-              Get Started
+              {t("getStarted")}
             </Button>
           </div>
         </div>
