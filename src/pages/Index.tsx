@@ -4,6 +4,7 @@ import ServicesGrid from "@/components/ServicesGrid";
 import AboutSection from "@/components/AboutSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
+import AIChatBot from "@/components/AIChatBot";
 
 const Index = () => {
   return (
@@ -14,6 +15,7 @@ const Index = () => {
       <AboutSection />
       <ContactSection />
       <Footer />
+      <AIChatBot />
     </div>
   );
 };
