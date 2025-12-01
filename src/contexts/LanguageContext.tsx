@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from "react";
+import { translations } from "@/translations/translations";
 
 type Language = "en" | "fr" | "pt";
 
@@ -26,7 +27,6 @@ export const LanguageProvider = ({ children }: LanguageProviderProps) => {
   const [language, setLanguage] = useState<Language>("en");
 
   const t = (key: string): string => {
-    const translations = require("@/translations/translations").translations;
     return translations[language]?.[key] || key;
   };
 
