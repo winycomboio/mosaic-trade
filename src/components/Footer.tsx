@@ -31,8 +31,8 @@ const Footer = () => {
           <div>
             <h3 className="font-semibold mb-4 text-primary-gold">Contact</h3>
             <ul className="space-y-2 text-white/80 text-sm">
-              <li>info@globaltradecorp.com</li>
-              <li>+1 (555) 123-4567</li>
+              <li>biqueglobalenterprise@gmail.com</li>
+              <li>+971527759591</li>
               <li>123 Business District</li>
               <li>Global Trade Center</li>
             </ul>

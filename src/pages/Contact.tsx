@@ -10,14 +10,14 @@ const contactInfo = [
   {
     icon: Mail,
     title: "Email Us",
-    details: "info@globaltradecorp.com",
-    subtitle: "business@globaltradecorp.com"
+    details: "biqueglobalenterprise@gmail.com",
+    subtitle: ""
   },
   {
     icon: Phone,
     title: "Call Us",
-    details: "+1 (555) 123-4567",
-    subtitle: "+1 (555) 987-6543"
+    details: "+971527759591",
+    subtitle: ""
   },
   {
     icon: MapPin,
