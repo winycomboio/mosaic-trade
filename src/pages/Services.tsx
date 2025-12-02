@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import SearchBar from "@/components/SearchBar";
 import { useNavigate } from "react-router-dom";
+import { useLanguage } from "@/contexts/LanguageContext";
 import { 
   Globe, 
   ShoppingCart, 
@@ -18,88 +19,89 @@ import {
   ArrowLeft
 } from "lucide-react";
 
-const services = [
-  {
-    id: "general-trading",
-    icon: Globe,
-    title: "General Trading",
-    description: "Comprehensive export/import solutions for diverse product categories worldwide",
-    category: "Export/Import"
-  },
-  {
-    id: "food-beverages",
-    icon: ShoppingCart,
-    title: "Food & Beverages",
-    description: "Specialized import and export of quality food products and beverages",
-    category: "F&B Trading"
-  },
-  {
-    id: "car-export",
-    icon: Car,
-    title: "Car Export",
-    description: "Professional automotive export services with global logistics support",
-    category: "Automotive"
-  },
-  {
-    id: "hr-consultancy",
-    icon: Users,
-    title: "HR Consultancy",
-    description: "Expert human resource consulting and talent management solutions",
-    category: "Consultancy"
-  },
-  {
-    id: "precious-metals",
-    icon: Gem,
-    title: "Precious Metals & Gems",
-    description: "Trusted intermediary services for precious metals and gemstone trading",
-    category: "Commodities"
-  },
-  {
-    id: "ecommerce",
-    icon: Monitor,
-    title: "E-Commerce",
-    description: "Digital commerce solutions and online marketplace management",
-    category: "Digital"
-  },
-  {
-    id: "business-management",
-    icon: Briefcase,
-    title: "Business Management",
-    description: "Strategic business consulting and operational management services",
-    category: "Management"
-  },
-  {
-    id: "crude-oil",
-    icon: Fuel,
-    title: "Crude Oil Trading",
-    description: "Professional petroleum and energy commodity trading services",
-    category: "Energy"
-  },
-  {
-    id: "logistics",
-    icon: Truck,
-    title: "Logistics",
-    description: "End-to-end supply chain and logistics management solutions",
-    category: "Supply Chain"
-  },
-  {
-    id: "agriculture",
-    icon: Wheat,
-    title: "Agriculture & Fertilizer",
-    description: "Agricultural products and fertilizer trading with quality assurance",
-    category: "Agriculture"
-  },
-  {
-    id: "travel-agency",
-    icon: Plane,
-    title: "Travel Agency",
-    description: "Comprehensive travel planning and booking services for business and leisure",
-    category: "Travel"
-  }
-];
-
 const Services = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
+
+  const services = [
+    {
+      id: "general-trading",
+      icon: Globe,
+      titleKey: "generalTrading",
+      descKey: "generalTradingDesc",
+      categoryKey: "categoryExportImport"
+    },
+    {
+      id: "food-beverages",
+      icon: ShoppingCart,
+      titleKey: "foodBeverages",
+      descKey: "foodBeveragesDesc",
+      categoryKey: "categoryFB"
+    },
+    {
+      id: "car-export",
+      icon: Car,
+      titleKey: "carExport",
+      descKey: "carExportDesc",
+      categoryKey: "categoryAutomotive"
+    },
+    {
+      id: "hr-consultancy",
+      icon: Users,
+      titleKey: "hrConsultancy",
+      descKey: "hrConsultancyDesc",
+      categoryKey: "categoryConsultancy"
+    },
+    {
+      id: "precious-metals",
+      icon: Gem,
+      titleKey: "preciousMetals",
+      descKey: "preciousMetalsDesc",
+      categoryKey: "categoryCommodities"
+    },
+    {
+      id: "ecommerce",
+      icon: Monitor,
+      titleKey: "ecommerce",
+      descKey: "ecommerceDesc",
+      categoryKey: "categoryDigital"
+    },
+    {
+      id: "business-management",
+      icon: Briefcase,
+      titleKey: "businessManagement",
+      descKey: "businessManagementDesc",
+      categoryKey: "categoryManagement"
+    },
+    {
+      id: "crude-oil",
+      icon: Fuel,
+      titleKey: "crudeOil",
+      descKey: "crudeOilDesc",
+      categoryKey: "categoryEnergy"
+    },
+    {
+      id: "logistics",
+      icon: Truck,
+      titleKey: "logistics",
+      descKey: "logisticsDesc",
+      categoryKey: "categorySupplyChain"
+    },
+    {
+      id: "agriculture",
+      icon: Wheat,
+      titleKey: "agriculture",
+      descKey: "agricultureDesc",
+      categoryKey: "categoryAgriculture"
+    },
+    {
+      id: "travel-agency",
+      icon: Plane,
+      titleKey: "travelAgency",
+      descKey: "travelAgencyDesc",
+      categoryKey: "categoryTravel"
+    }
+  ];
 
   const handleServiceSelect = (serviceId: string) => {
     navigate(`/services/${serviceId}`);
@@ -114,17 +116,17 @@ const Services = () => {
             <Link to="/">
               <Button variant="ghost" className="mr-4">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Home
+                {t("backToHome")}
               </Button>
             </Link>
           </div>
           
           <div className="text-center mb-12">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 text-primary">
-              Our Services
+              {t("ourServices")}
             </h1>
             <p className="text-xl text-text-secondary max-w-3xl mx-auto mb-8">
-              Explore our comprehensive range of business solutions across multiple industries
+              {t("servicesSubtitle")}
             </p>
             
             <div className="flex justify-center mb-8">
@@ -148,21 +150,21 @@ const Services = () => {
                         <IconComponent className="w-10 h-10 text-white" />
                       </div>
                       <div className="inline-block px-3 py-1 bg-primary-gold/20 text-primary-gold text-sm rounded-full font-medium mb-2">
-                        {service.category}
+                        {t(service.categoryKey)}
                       </div>
                       <CardTitle className="text-2xl font-bold text-primary group-hover:text-primary-navy transition-colors">
-                        {service.title}
+                        {t(service.titleKey)}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <CardDescription className="text-text-secondary leading-relaxed text-center mb-6">
-                        {service.description}
+                        {t(service.descKey)}
                       </CardDescription>
                       <Button 
                         variant="outline" 
                         className="w-full group-hover:bg-primary group-hover:text-white transition-colors"
                       >
-                        Learn More
+                        {t("learnMore")}
                       </Button>
                     </CardContent>
                   </Card>
