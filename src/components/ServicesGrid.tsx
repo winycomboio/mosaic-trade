@@ -13,98 +13,100 @@ import {
   Wheat,
   Plane
 } from "lucide-react";
-
-const services = [
-  {
-    id: "general-trading",
-    icon: Globe,
-    title: "General Trading",
-    description: "Comprehensive export/import solutions for diverse product categories worldwide",
-    category: "Export/Import"
-  },
-  {
-    id: "food-beverages",
-    icon: ShoppingCart,
-    title: "Food & Beverages",
-    description: "Specialized import and export of quality food products and beverages",
-    category: "F&B Trading"
-  },
-  {
-    id: "car-export",
-    icon: Car,
-    title: "Car Export",
-    description: "Professional automotive export services with global logistics support",
-    category: "Automotive"
-  },
-  {
-    id: "hr-consultancy",
-    icon: Users,
-    title: "HR Consultancy",
-    description: "Expert human resource consulting and talent management solutions",
-    category: "Consultancy"
-  },
-  {
-    id: "precious-metals",
-    icon: Gem,
-    title: "Precious Metals & Gems",
-    description: "Trusted intermediary services for precious metals and gemstone trading",
-    category: "Commodities"
-  },
-  {
-    id: "ecommerce",
-    icon: Monitor,
-    title: "E-Commerce",
-    description: "Digital commerce solutions and online marketplace management",
-    category: "Digital"
-  },
-  {
-    id: "business-management",
-    icon: Briefcase,
-    title: "Business Management",
-    description: "Strategic business consulting and operational management services",
-    category: "Management"
-  },
-  {
-    id: "crude-oil",
-    icon: Fuel,
-    title: "Crude Oil Trading",
-    description: "Professional petroleum and energy commodity trading services",
-    category: "Energy"
-  },
-  {
-    id: "logistics",
-    icon: Truck,
-    title: "Logistics",
-    description: "End-to-end supply chain and logistics management solutions",
-    category: "Supply Chain"
-  },
-  {
-    id: "agriculture",
-    icon: Wheat,
-    title: "Agriculture & Fertilizer",
-    description: "Agricultural products and fertilizer trading with quality assurance",
-    category: "Agriculture"
-  },
-  {
-    id: "travel-agency",
-    icon: Plane,
-    title: "Travel Agency",
-    description: "Comprehensive travel planning and booking services for business and leisure",
-    category: "Travel"
-  }
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const ServicesGrid = () => {
+  const { t } = useLanguage();
+
+  const services = [
+    {
+      id: "general-trading",
+      icon: Globe,
+      titleKey: "generalTrading",
+      descKey: "generalTradingDesc",
+      categoryKey: "categoryExportImport"
+    },
+    {
+      id: "food-beverages",
+      icon: ShoppingCart,
+      titleKey: "foodBeverages",
+      descKey: "foodBeveragesDesc",
+      categoryKey: "categoryFB"
+    },
+    {
+      id: "car-export",
+      icon: Car,
+      titleKey: "carExport",
+      descKey: "carExportDesc",
+      categoryKey: "categoryAutomotive"
+    },
+    {
+      id: "hr-consultancy",
+      icon: Users,
+      titleKey: "hrConsultancy",
+      descKey: "hrConsultancyDesc",
+      categoryKey: "categoryConsultancy"
+    },
+    {
+      id: "precious-metals",
+      icon: Gem,
+      titleKey: "preciousMetals",
+      descKey: "preciousMetalsDesc",
+      categoryKey: "categoryCommodities"
+    },
+    {
+      id: "ecommerce",
+      icon: Monitor,
+      titleKey: "ecommerce",
+      descKey: "ecommerceDesc",
+      categoryKey: "categoryDigital"
+    },
+    {
+      id: "business-management",
+      icon: Briefcase,
+      titleKey: "businessManagement",
+      descKey: "businessManagementDesc",
+      categoryKey: "categoryManagement"
+    },
+    {
+      id: "crude-oil",
+      icon: Fuel,
+      titleKey: "crudeOil",
+      descKey: "crudeOilDesc",
+      categoryKey: "categoryEnergy"
+    },
+    {
+      id: "logistics",
+      icon: Truck,
+      titleKey: "logistics",
+      descKey: "logisticsDesc",
+      categoryKey: "categorySupplyChain"
+    },
+    {
+      id: "agriculture",
+      icon: Wheat,
+      titleKey: "agriculture",
+      descKey: "agricultureDesc",
+      categoryKey: "categoryAgriculture"
+    },
+    {
+      id: "travel-agency",
+      icon: Plane,
+      titleKey: "travelAgency",
+      descKey: "travelAgencyDesc",
+      categoryKey: "categoryTravel"
+    }
+  ];
+
   return (
     <section id="services" className="py-20 bg-gradient-subtle">
       <div className="container mx-auto px-6">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary">
-            Our Services
+            {t("ourServices")}
           </h2>
           <p className="text-xl text-text-secondary max-w-3xl mx-auto">
-            We provide comprehensive business solutions across multiple industries, 
-            backed by expertise and global partnerships
+            {t("servicesSubtitle")}
           </p>
         </div>
         
@@ -119,15 +121,15 @@ const ServicesGrid = () => {
                       <IconComponent className="w-8 h-8 text-white" />
                     </div>
                     <div className="inline-block px-3 py-1 bg-primary-gold/20 text-primary-gold text-sm rounded-full font-medium mb-2">
-                      {service.category}
+                      {t(service.categoryKey)}
                     </div>
                     <CardTitle className="text-xl font-bold text-primary group-hover:text-primary-navy transition-colors">
-                      {service.title}
+                      {t(service.titleKey)}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
                     <CardDescription className="text-text-secondary leading-relaxed">
-                      {service.description}
+                      {t(service.descKey)}
                     </CardDescription>
                   </CardContent>
                 </Card>

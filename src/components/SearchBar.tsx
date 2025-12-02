@@ -3,32 +3,34 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, X } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-
-const services = [
-  { id: "general-trading", title: "General Trading", category: "Export/Import" },
-  { id: "food-beverages", title: "Food & Beverages", category: "F&B Trading" },
-  { id: "car-export", title: "Car Export", category: "Automotive" },
-  { id: "hr-consultancy", title: "HR Consultancy", category: "Consultancy" },
-  { id: "precious-metals", title: "Precious Metals & Gems", category: "Commodities" },
-  { id: "ecommerce", title: "E-Commerce", category: "Digital" },
-  { id: "business-management", title: "Business Management", category: "Management" },
-  { id: "crude-oil", title: "Crude Oil Trading", category: "Energy" },
-  { id: "logistics", title: "Logistics", category: "Supply Chain" },
-  { id: "agriculture", title: "Agriculture & Fertilizer", category: "Agriculture" },
-  { id: "travel-agency", title: "Travel Agency", category: "Travel" }
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface SearchBarProps {
   onServiceSelect?: (serviceId: string) => void;
 }
 
 const SearchBar = ({ onServiceSelect }: SearchBarProps) => {
+  const { t } = useLanguage();
   const [query, setQuery] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
+  const services = [
+    { id: "general-trading", titleKey: "generalTrading", categoryKey: "categoryExportImport" },
+    { id: "food-beverages", titleKey: "foodBeverages", categoryKey: "categoryFB" },
+    { id: "car-export", titleKey: "carExport", categoryKey: "categoryAutomotive" },
+    { id: "hr-consultancy", titleKey: "hrConsultancy", categoryKey: "categoryConsultancy" },
+    { id: "precious-metals", titleKey: "preciousMetals", categoryKey: "categoryCommodities" },
+    { id: "ecommerce", titleKey: "ecommerce", categoryKey: "categoryDigital" },
+    { id: "business-management", titleKey: "businessManagement", categoryKey: "categoryManagement" },
+    { id: "crude-oil", titleKey: "crudeOil", categoryKey: "categoryEnergy" },
+    { id: "logistics", titleKey: "logistics", categoryKey: "categorySupplyChain" },
+    { id: "agriculture", titleKey: "agriculture", categoryKey: "categoryAgriculture" },
+    { id: "travel-agency", titleKey: "travelAgency", categoryKey: "categoryTravel" }
+  ];
+
   const filteredServices = services.filter(service =>
-    service.title.toLowerCase().includes(query.toLowerCase()) ||
-    service.category.toLowerCase().includes(query.toLowerCase())
+    t(service.titleKey).toLowerCase().includes(query.toLowerCase()) ||
+    t(service.categoryKey).toLowerCase().includes(query.toLowerCase())
   );
 
   const handleServiceClick = (serviceId: string) => {
@@ -45,7 +47,7 @@ const SearchBar = ({ onServiceSelect }: SearchBarProps) => {
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-text-secondary w-4 h-4" />
         <Input
           type="text"
-          placeholder="Search services..."
+          placeholder={t("searchPlaceholder")}
           value={query}
           onChange={(e) => {
             setQuery(e.target.value);
@@ -79,8 +81,8 @@ const SearchBar = ({ onServiceSelect }: SearchBarProps) => {
                 className="flex items-center justify-between p-3 hover:bg-primary-light/50 rounded-md cursor-pointer transition-colors"
               >
                 <div>
-                  <div className="font-medium text-primary">{service.title}</div>
-                  <div className="text-sm text-text-secondary">{service.category}</div>
+                  <div className="font-medium text-primary">{t(service.titleKey)}</div>
+                  <div className="text-sm text-text-secondary">{t(service.categoryKey)}</div>
                 </div>
               </div>
             ))}
