@@ -231,36 +231,47 @@ const AIChatBot = () => {
       
       dc.addEventListener("message", (e) => {
         const event = JSON.parse(e.data);
-        console.log("Realtime event:", event.type);
+        console.log("Realtime event:", event.type, event);
         
-        if (event.type === "response.audio.delta") {
+        // Handle different event types
+        if (event.type === "session.created") {
+          console.log("Session created, sending session update");
+          // Session is ready - configuration was already set in the edge function
+        } else if (event.type === "session.updated") {
+          console.log("Session updated successfully");
+        } else if (event.type === "response.audio.delta") {
           setIsListening(false);
         } else if (event.type === "response.audio.done") {
           setIsListening(true);
+        } else if (event.type === "response.done") {
+          console.log("Response completed");
+          setIsListening(true);
         } else if (event.type === "input_audio_buffer.speech_started") {
+          console.log("User started speaking");
           setIsListening(true);
         } else if (event.type === "input_audio_buffer.speech_stopped") {
+          console.log("User stopped speaking");
           setIsListening(false);
         } else if (event.type === "response.audio_transcript.done" && event.transcript) {
           // Add AI response to chat
+          console.log("AI transcript:", event.transcript);
           setMessages(prev => [...prev, { role: "assistant", content: event.transcript }]);
         } else if (event.type === "conversation.item.input_audio_transcription.completed" && event.transcript) {
           // Add user speech to chat
+          console.log("User transcript:", event.transcript);
           setMessages(prev => [...prev, { role: "user", content: event.transcript }]);
+        } else if (event.type === "error") {
+          console.error("Realtime API error:", event.error);
+          toast({
+            title: "Error",
+            description: event.error?.message || "Voice call error",
+            variant: "destructive",
+          });
         }
       });
 
       dc.addEventListener("open", () => {
-        console.log("Data channel open");
-        // Enable input audio transcription
-        dc.send(JSON.stringify({
-          type: "session.update",
-          session: {
-            input_audio_transcription: {
-              model: "whisper-1"
-            }
-          }
-        }));
+        console.log("Data channel open - ready for conversation");
       });
 
       // Create and set local description
