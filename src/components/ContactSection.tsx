@@ -1,12 +1,49 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, Phone, MapPin, Clock } from "lucide-react";
+import { Mail, Phone, MapPin, Clock, Loader2 } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const ContactSection = () => {
   const { t } = useLanguage();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    company: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const { error } = await supabase.functions.invoke("send-contact-email", {
+        body: formData,
+      });
+
+      if (error) throw error;
+
+      toast.success(t("messageSent") || "Message sent successfully!");
+      setFormData({ name: "", email: "", company: "", phone: "", subject: "", message: "" });
+    } catch (error) {
+      console.error("Error sending message:", error);
+      toast.error(t("messageError") || "Failed to send message. Please try again.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
 
   const contactInfo = [
     {
@@ -53,27 +90,76 @@ const ContactSection = () => {
               <CardHeader>
                 <CardTitle className="text-2xl text-primary">{t("sendMessage")}</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input placeholder={t("fullName")} className="border-border/50 focus:border-primary" />
-                  <Input placeholder={t("emailAddress")} type="email" className="border-border/50 focus:border-primary" />
-                </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <Input placeholder={t("companyName")} className="border-border/50 focus:border-primary" />
-                  <Input placeholder={t("phoneNumber")} className="border-border/50 focus:border-primary" />
-                </div>
-                <Input placeholder={t("subject")} className="border-border/50 focus:border-primary" />
-                <Textarea 
-                  placeholder={t("message")}
-                  rows={6}
-                  className="border-border/50 focus:border-primary resize-none"
-                />
-                <Button 
-                  size="lg" 
-                  className="w-full bg-gradient-primary hover:opacity-90 transition-opacity shadow-elegant"
-                >
-                  {t("send")}
-                </Button>
+              <CardContent>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Input 
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      placeholder={t("fullName")} 
+                      className="border-border/50 focus:border-primary" 
+                      required 
+                    />
+                    <Input 
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      placeholder={t("emailAddress")} 
+                      type="email" 
+                      className="border-border/50 focus:border-primary" 
+                      required 
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <Input 
+                      name="company"
+                      value={formData.company}
+                      onChange={handleChange}
+                      placeholder={t("companyName")} 
+                      className="border-border/50 focus:border-primary" 
+                    />
+                    <Input 
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      placeholder={t("phoneNumber")} 
+                      className="border-border/50 focus:border-primary" 
+                    />
+                  </div>
+                  <Input 
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    placeholder={t("subject")} 
+                    className="border-border/50 focus:border-primary" 
+                    required 
+                  />
+                  <Textarea 
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    placeholder={t("message")}
+                    rows={6}
+                    className="border-border/50 focus:border-primary resize-none"
+                    required
+                  />
+                  <Button 
+                    type="submit"
+                    size="lg" 
+                    className="w-full bg-gradient-primary hover:opacity-90 transition-opacity shadow-elegant"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        {t("sending") || "Sending..."}
+                      </>
+                    ) : (
+                      t("send")
+                    )}
+                  </Button>
+                </form>
               </CardContent>
             </Card>
           </div>
