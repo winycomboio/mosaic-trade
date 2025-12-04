@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { MessageCircle, X, Send, Paperclip, Phone, PhoneOff, Mic, MicOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -76,8 +76,12 @@ const AIChatBot = () => {
   const [attachments, setAttachments] = useState<File[]>([]);
   const [isInCall, setIsInCall] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [isConnecting, setIsConnecting] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const pcRef = useRef<RTCPeerConnection | null>(null);
+  const dcRef = useRef<RTCDataChannel | null>(null);
+  const audioElRef = useRef<HTMLAudioElement | null>(null);
   const { toast } = useToast();
 
   // Update greeting when language changes
@@ -183,21 +187,162 @@ const AIChatBot = () => {
     }
   };
 
-  const toggleVoiceCall = () => {
-    if (isInCall) {
-      setIsInCall(false);
-      setIsListening(false);
-      toast({
-        title: t.callEnded,
+  const startVoiceCall = useCallback(async () => {
+    if (isConnecting) return;
+    
+    setIsConnecting(true);
+    
+    try {
+      // Get ephemeral token from edge function
+      const { data: tokenData, error: tokenError } = await supabase.functions.invoke("realtime-session", {
+        body: { language }
       });
-    } else {
+      
+      if (tokenError || !tokenData?.client_secret?.value) {
+        throw new Error(tokenError?.message || "Failed to get session token");
+      }
+
+      const EPHEMERAL_KEY = tokenData.client_secret.value;
+
+      // Create audio element
+      if (!audioElRef.current) {
+        audioElRef.current = document.createElement("audio");
+        audioElRef.current.autoplay = true;
+      }
+
+      // Create peer connection
+      const pc = new RTCPeerConnection();
+      pcRef.current = pc;
+
+      // Set up remote audio
+      pc.ontrack = (e) => {
+        if (audioElRef.current) {
+          audioElRef.current.srcObject = e.streams[0];
+        }
+      };
+
+      // Add local audio track
+      const ms = await navigator.mediaDevices.getUserMedia({ audio: true });
+      pc.addTrack(ms.getTracks()[0]);
+
+      // Set up data channel
+      const dc = pc.createDataChannel("oai-events");
+      dcRef.current = dc;
+      
+      dc.addEventListener("message", (e) => {
+        const event = JSON.parse(e.data);
+        console.log("Realtime event:", event.type);
+        
+        if (event.type === "response.audio.delta") {
+          setIsListening(false);
+        } else if (event.type === "response.audio.done") {
+          setIsListening(true);
+        } else if (event.type === "input_audio_buffer.speech_started") {
+          setIsListening(true);
+        } else if (event.type === "input_audio_buffer.speech_stopped") {
+          setIsListening(false);
+        } else if (event.type === "response.audio_transcript.done" && event.transcript) {
+          // Add AI response to chat
+          setMessages(prev => [...prev, { role: "assistant", content: event.transcript }]);
+        } else if (event.type === "conversation.item.input_audio_transcription.completed" && event.transcript) {
+          // Add user speech to chat
+          setMessages(prev => [...prev, { role: "user", content: event.transcript }]);
+        }
+      });
+
+      dc.addEventListener("open", () => {
+        console.log("Data channel open");
+        // Enable input audio transcription
+        dc.send(JSON.stringify({
+          type: "session.update",
+          session: {
+            input_audio_transcription: {
+              model: "whisper-1"
+            }
+          }
+        }));
+      });
+
+      // Create and set local description
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+
+      // Connect to OpenAI's Realtime API
+      const baseUrl = "https://api.openai.com/v1/realtime";
+      const model = "gpt-4o-realtime-preview-2024-12-17";
+      const sdpResponse = await fetch(`${baseUrl}?model=${model}`, {
+        method: "POST",
+        body: offer.sdp,
+        headers: {
+          Authorization: `Bearer ${EPHEMERAL_KEY}`,
+          "Content-Type": "application/sdp"
+        },
+      });
+
+      if (!sdpResponse.ok) {
+        throw new Error("Failed to connect to OpenAI Realtime");
+      }
+
+      const answer: RTCSessionDescriptionInit = {
+        type: "answer",
+        sdp: await sdpResponse.text(),
+      };
+      
+      await pc.setRemoteDescription(answer);
+      
+      setIsInCall(true);
+      setIsListening(true);
+      
       toast({
-        title: t.voiceNotSupported,
-        description: "OpenAI API key required for voice calls. Contact support for setup.",
+        title: t.callStarted,
+      });
+    } catch (error: any) {
+      console.error("Voice call error:", error);
+      toast({
+        title: "Error",
+        description: error.message || "Failed to start voice call",
         variant: "destructive",
       });
+      endVoiceCall();
+    } finally {
+      setIsConnecting(false);
+    }
+  }, [language, isConnecting, t, toast]);
+
+  const endVoiceCall = useCallback(() => {
+    if (dcRef.current) {
+      dcRef.current.close();
+      dcRef.current = null;
+    }
+    if (pcRef.current) {
+      pcRef.current.close();
+      pcRef.current = null;
+    }
+    if (audioElRef.current) {
+      audioElRef.current.srcObject = null;
+    }
+    setIsInCall(false);
+    setIsListening(false);
+    toast({
+      title: t.callEnded,
+    });
+  }, [t, toast]);
+
+  const toggleVoiceCall = () => {
+    if (isInCall) {
+      endVoiceCall();
+    } else {
+      startVoiceCall();
     }
   };
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (dcRef.current) dcRef.current.close();
+      if (pcRef.current) pcRef.current.close();
+    };
+  }, []);
 
   return (
     <>
@@ -226,10 +371,17 @@ const AIChatBot = () => {
                 variant="ghost"
                 size="icon"
                 onClick={toggleVoiceCall}
-                className={`text-primary-foreground hover:bg-primary-foreground/20 ${isInCall ? 'bg-red-500/30' : ''}`}
+                disabled={isConnecting}
+                className={`text-primary-foreground hover:bg-primary-foreground/20 ${isInCall ? 'bg-red-500/30' : ''} ${isConnecting ? 'opacity-50' : ''}`}
                 title={isInCall ? t.endCall : t.voiceCall}
               >
-                {isInCall ? <PhoneOff className="h-5 w-5" /> : <Phone className="h-5 w-5" />}
+                {isConnecting ? (
+                  <div className="h-5 w-5 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                ) : isInCall ? (
+                  <PhoneOff className="h-5 w-5" />
+                ) : (
+                  <Phone className="h-5 w-5" />
+                )}
               </Button>
               <Button
                 variant="ghost"
