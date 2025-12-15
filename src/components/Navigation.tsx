@@ -7,6 +7,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Globe, Menu, X } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { useState } from "react";
+import logo from "@/assets/logo.jpeg";
 
 const Navigation = () => {
   const navigate = useNavigate();
@@ -22,8 +23,8 @@ const Navigation = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <Link to="/" className="text-2xl font-bold bg-gradient-primary bg-clip-text text-transparent">
-            Bique Global Enterprise
+          <Link to="/" className="flex items-center">
+            <img src={logo} alt="Bique Global Enterprise" className="h-10 w-auto" />
           </Link>
           
           {/* Desktop Search */}
