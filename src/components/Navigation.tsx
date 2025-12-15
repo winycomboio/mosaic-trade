@@ -23,8 +23,11 @@ const Navigation = () => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center">
+          <Link to="/" className="flex items-center gap-3">
             <img src={logo} alt="Bique Global Enterprise" className="h-10 w-auto" />
+            <span className="text-xl font-bold bg-gradient-primary bg-clip-text text-transparent hidden sm:inline">
+              Bique Global Enterprise
+            </span>
           </Link>
           
           {/* Desktop Search */}
