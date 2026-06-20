@@ -39,9 +39,9 @@ const Contact = () => {
     {
       icon: WhatsAppIcon,
       titleKey: "whatsApp",
-      details: "+971 52 775 9591",
+      details: "+971 56 852 1739",
       subtitle: t("chatOnWhatsApp"),
-      link: "https://wa.me/971527759591"
+      link: "https://wa.me/971568521739"
     },
     {
       icon: MapPin,
