@@ -9,6 +9,8 @@ export const translations: Record<string, Record<string, string>> = {
     // Contact Info
     emailUs: "Email Us",
     callUs: "Call Us",
+    whatsApp: "WhatsApp",
+    chatOnWhatsApp: "Chat on WhatsApp",
     visitUs: "Visit Us",
     businessHours: "Business Hours",
     
