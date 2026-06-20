@@ -69,7 +69,17 @@ const Footer = () => {
               </li>
               <li>
                 <a href="tel:+971527759591" className="hover:text-primary-gold transition-colors">
-                  +971527759591
+                  {t("callUs")}: +971527759591
+                </a>
+              </li>
+              <li>
+                <a 
+                  href="https://wa.me/971527759591" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  className="hover:text-primary-gold transition-colors flex items-center gap-1.5"
+                >
+                  WhatsApp: +971 52 775 9591
                 </a>
               </li>
               <li>123 Business District</li>
