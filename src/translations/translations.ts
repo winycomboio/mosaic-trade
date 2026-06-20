@@ -144,6 +144,8 @@ export const translations: Record<string, Record<string, string>> = {
     // Contact Info
     emailUs: "Nous envoyer un e-mail",
     callUs: "Nous appeler",
+    whatsApp: "WhatsApp",
+    chatOnWhatsApp: "Discuter sur WhatsApp",
     visitUs: "Nous rendre visite",
     businessHours: "Heures d'ouverture",
     
@@ -275,6 +277,8 @@ export const translations: Record<string, Record<string, string>> = {
     // Contact Info
     emailUs: "Envie-nos um e-mail",
     callUs: "Ligue para nós",
+    whatsApp: "WhatsApp",
+    chatOnWhatsApp: "Conversar no WhatsApp",
     visitUs: "Visite-nos",
     businessHours: "Horário de funcionamento",
     
