@@ -57,11 +57,11 @@ const Navigation = () => {
                 <SelectItem value="pt">Português</SelectItem>
               </SelectContent>
             </Select>
-            <Link to="/contact">
+            <a href="https://wa.me/971568521739" target="_blank" rel="noopener noreferrer">
               <Button variant="default" className="bg-gradient-primary hover:opacity-90 transition-opacity">
                 {t("getStarted")}
               </Button>
-            </Link>
+            </a>
           </div>
 
           {/* Mobile Menu */}
@@ -117,11 +117,11 @@ const Navigation = () => {
                 </div>
 
                 <SheetClose asChild>
-                  <Link to="/contact">
+                  <a href="https://wa.me/971568521739" target="_blank" rel="noopener noreferrer" className="w-full block">
                     <Button className="w-full bg-gradient-primary hover:opacity-90 transition-opacity">
                       {t("getStarted")}
                     </Button>
-                  </Link>
+                  </a>
                 </SheetClose>
               </nav>
             </SheetContent>

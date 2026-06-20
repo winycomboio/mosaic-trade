@@ -34,7 +34,7 @@ const Hero = () => {
               {t("exploreServices")}
             </Button>
           </Link>
-          <Link to="/contact">
+          <a href="https://wa.me/971568521739" target="_blank" rel="noopener noreferrer">
             <Button 
               size="lg" 
               variant="outline" 
@@ -42,7 +42,7 @@ const Hero = () => {
             >
               {t("contactUs")}
             </Button>
-          </Link>
+          </a>
         </div>
       </div>
     </section>
