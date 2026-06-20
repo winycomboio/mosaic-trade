@@ -26,13 +26,22 @@ const Contact = () => {
       icon: Mail,
       titleKey: "emailUs",
       details: "biqueglobalenterprise@gmail.com",
-      subtitle: ""
+      subtitle: "",
+      link: "mailto:biqueglobalenterprise@gmail.com"
     },
     {
       icon: Phone,
       titleKey: "callUs",
       details: "+971527759591",
-      subtitle: ""
+      subtitle: "",
+      link: "tel:+971527759591"
+    },
+    {
+      icon: WhatsAppIcon,
+      titleKey: "whatsApp",
+      details: "+971 52 775 9591",
+      subtitle: t("chatOnWhatsApp"),
+      link: "https://wa.me/971527759591"
     },
     {
       icon: MapPin,
