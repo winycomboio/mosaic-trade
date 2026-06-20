@@ -187,8 +187,8 @@ const ContactSection = () => {
           <div className="space-y-6">
             {contactInfo.map((info, index) => {
               const IconComponent = info.icon;
-              return (
-                <Card key={index} className="p-6 hover:shadow-elegant transition-shadow duration-300 bg-white border-0 shadow-md">
+              const cardContent = (
+                <Card className={`p-6 bg-white border-0 shadow-md ${info.link ? 'hover:shadow-elegant transition-all duration-300 cursor-pointer hover:-translate-y-0.5' : 'hover:shadow-elegant transition-shadow duration-300'}`}>
                   <div className="flex items-start space-x-4">
                     <div className="w-12 h-12 bg-gradient-gold rounded-full flex items-center justify-center flex-shrink-0">
                       <IconComponent className="w-6 h-6 text-primary-navy" />
@@ -196,11 +196,27 @@ const ContactSection = () => {
                     <div>
                       <h3 className="font-semibold text-primary mb-2">{t(info.titleKey)}</h3>
                       <p className="text-text-secondary text-sm mb-1">{info.details}</p>
-                      <p className="text-text-secondary text-sm">{info.subtitle}</p>
+                      <p className="text-text-secondary text-sm font-medium text-primary-navy/80">{info.subtitle}</p>
                     </div>
                   </div>
                 </Card>
               );
+
+              if (info.link) {
+                return (
+                  <a 
+                    key={index} 
+                    href={info.link} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="block focus:outline-none"
+                  >
+                    {cardContent}
+                  </a>
+                );
+              }
+
+              return <div key={index}>{cardContent}</div>;
             })}
           </div>
         </div>
